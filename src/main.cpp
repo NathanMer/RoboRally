@@ -4,6 +4,12 @@
 #include <SFML/Graphics.hpp>
 #include "graphics/TileMap.h"
 
+struct Card
+{
+    int priority;
+    char type;
+};
+
 sf::VideoMode getBestFullscreenMode()
 {
     std::vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes();
@@ -50,10 +56,55 @@ void onEast () {
     map.move(level, 1,0);
 }
 
-void makeCard() {
-    auto cardButton = sfg::Button::Create("");
-    cardButton->GetSignal(sfg::Widget::OnLeftClick).Connect(onAddCard);
+void onAddCard(Card card, int index) {
+
 }
+
+void makeCard(Card card, int index) {
+    auto cardButton = sfg::Button::Create("" + std::to_string(card.priority) + " " + std::to_string(card.type));
+    cardButton->GetSignal(sfg::Widget::OnLeftClick).Connect(std::bind(onAddCard, card, index));
+}
+
+class CardManager
+{
+    public:
+        CardManager();
+        void placeCardPos(int index);
+        void placeCardCos(int index);
+    private:
+        Card allCards[9];
+        std::vector<Card> posCards;
+        std::vector<Card> cosCards;
+};
+
+CardManager::CardManager ()
+{
+    allCards[0].priority = 500;
+    allCards[0].type = 1;
+    allCards[1].priority = 500;
+    allCards[1].type = 1;
+    allCards[2].priority = 500;
+    allCards[2].type = 1;
+    allCards[3].priority = 500;
+    allCards[3].type = 1;
+    allCards[4].priority = 500;
+    allCards[4].type = 1;
+    allCards[5].priority = 500;
+    allCards[5].type = 1;
+    allCards[6].priority = 500;
+    allCards[6].type = 1;
+    allCards[7].priority = 500;
+    allCards[7].type = 1;
+    allCards[8].priority = 500;
+    allCards[8].type = 1;
+}
+
+void CardManager::placeCardPos(int index)
+{
+    posCards.push_back(allCards[index]);
+}
+
+void CardManager::placeCardCos(int index)
 
 int main()
 {
