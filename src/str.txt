@@ -2,3 +2,5 @@ http://stackoverflow.com/questions/1577161/passing-a-structure-through-sockets-i
 
 http://stackoverflow.com/questions/8000851/passing-a-struct-over-tcp-sock-stream-socket-in-c
 
+http://www.codeproject.com/Questions/232203/How-to-send-structure-using-TCP-IP-socket-in-cplus
+
