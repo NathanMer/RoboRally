@@ -47,11 +47,16 @@ while len(g.players.keys()) < 2:
     print 'Connected with ' + addr[0] + ':' + str(addr[1])
 
     #start new thread
-    g.addPlayer()
+    conn.recv(1024)
+    g.addPlayer(conn)
     # start_new_thread(clientthread ,(conn,))
 
 while True:
 
-    g.sendInfo
+    g.sendInfo()
+
+    g.getMoves()
+
+    g.playTurn()
 
 s.close()

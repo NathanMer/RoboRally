@@ -27,9 +27,9 @@ class Card:
 		return struct.pack("!iB", self.priority, self.cardType)
 
 class Player:
-	def __init__(self, conn, name, id):
+	def __init__(self, conn, id):
 		self.conn = conn
-		self.name = name
+		# self.name = name
 		self.id = id
 		self.hp = 9
 		self.life = 3
@@ -107,6 +107,9 @@ class Game:
 
     	# send data to the player
 
+    def getMoves(self):
+    	map(lambda x: x.getMove(), self.players.values())
+
     def sendData():
     	cards.shuffle()
     	p = 0
@@ -115,7 +118,16 @@ class Game:
 
     	map(lambda x:x.pack() self.[players.values()])
 
-    	for player in self.players.values():
+    	vs = self.players.values()
+
+
+    	for i in range(len(players.keys())):
+    		p = self.players[i]
+    		vs.remove(p)
+    		mess = "".join(map(lambda x: x.packed, vs)) + p.packed
+
+    		p.conn.sendall(mess)
+    		vs.append(p)
 
 
     def playTurn(self):
@@ -188,8 +200,7 @@ class Game:
 					player.direct = (player.direct +1)%4
 				elif tileType == 17:
 					player.direct = (player.direct -1)%4
-
-    			
+  			
 
 	def move(player, distance, direction):
 		tile = getTileAt(player.pos[0], player.pos[1])

@@ -2,6 +2,7 @@
 #include <chrono>
 #include <thread>
 #include <boost/asio.hpp>
+#include "Python.h"
 
 
 #define NORTH 0
@@ -109,24 +110,46 @@ public:
 	std::vector<player> others;
 	std::vector<Card> available;
 	ip::tcp::socket sock;
-
-	sock.connect()
 	
-
-	game(arguments);
-	~game();
-
-	/* data */
 };
 
+int main(int argc, char const *argv[])
+{
+	gameLogic();
+	return 0;
+}
+
 void gameLogic() {
+	std::string
 
 	Game g;
-	/* 
-	join server
-	get the necessary parts of the game object and first hand of cards
-	poplulate the provided game object with this info
-	*/
+	// g.sock.connect()
+
+	// g.sock.recv
+
+
+	boost::asio::io_service io_service;
+
+    tcp::resolver resolver(io_service);
+    tcp::resolver::query query(tcp::v4(), "10.237.27.1", 12345);
+    tcp::resolver::iterator iterator = resolver.resolve(query);
+
+    tcp::socket s(io_service);
+    s.connect(*iterator);
+
+
+
+    size_t request_length = strlen(request);
+    boost::asio::write(s, boost::asio::buffer("givemestuff", 11));
+
+
+    char reply[384];
+    size_t reply_length = boost::asio::read(s,
+        boost::asio::buffer(reply, 384));
+	cout << reply;
+
+
+
 
 	every turn:
 		wait for the user (90 second timer?)
