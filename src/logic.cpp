@@ -1,6 +1,7 @@
 #include <vector>
 #include <chrono>
 #include <thread>
+#include <boost/asio.hpp>
 
 
 #define NORTH 0
@@ -106,6 +107,10 @@ public:
 	bool timedOut = false;
 	std::vector<player> others;
 	std::vector<Card> available;
+	ip::tcp::socket sock;
+
+	sock.connect()
+	
 
 	game(arguments);
 	~game();

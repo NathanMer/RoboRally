@@ -20,31 +20,38 @@ s.listen(10)
 print 'Socket now listening'
 
 #Function for handling connections
-def clientthread(conn):
-    #Sending message to connected client
-    conn.send('Welcome to the server. Receving Data...\n') #send only takes string
+# def clientthread(conn):
+#     #Sending message to connected client
+#     conn.send('Welcome to the server. Receving Data...\n') #send only takes string
 
-    #infinite loop so that function do not terminate and thread do not end.
-    while True:
+#     #infinite loop so that function do not terminate and thread do not end.
+#     while True:
 
-        #Receiving from client
-        data = conn.recv(1024)
-        reply = 'Message Received at the server!\n'
-        print data
-        if not data:
-            break
+#         #Receiving from client
+#         data = conn.recv(1024)
+#         reply = 'Message Received at the server!\n'
+#         print data
+#         if not data:
+#             break
 
-        conn.sendall(reply)
+#         conn.sendall(reply)
 
-    conn.close()
+#     conn.close()
+
+g = Game("testBoard.txt")
 
 #now keep talking with the client
-while 1:
+while len(g.players.keys()) < 2:
     #wait to accept a connection
     conn, addr = s.accept()
     print 'Connected with ' + addr[0] + ':' + str(addr[1])
 
     #start new thread
-    start_new_thread(clientthread ,(conn,))
+    g.addPlayer()
+    # start_new_thread(clientthread ,(conn,))
+
+while True:
+
+    g.sendInfo
 
 s.close()

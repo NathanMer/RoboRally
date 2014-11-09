@@ -1,5 +1,4 @@
-83 cards
-690 / Move 2
+#690 / Move 2
 #440 / Back 1
 #20  / U-Turn
 #750 / Move 2

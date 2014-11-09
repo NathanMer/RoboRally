@@ -1,4 +1,4 @@
-import struct
+import struct, random, socket
 
 class Tile:
 	def __init__(self, stringData ):  # floorType, direction, laserNums, laserDir):
@@ -36,6 +36,7 @@ class Player:
 		self.direct = 0  # 0 = up
 		self.shutDown = False
 		self.archive = (0,0)
+		self.packed = ""
 
 	def getMove(self):
 		data = conn.recv(1024)
@@ -56,11 +57,19 @@ class Player:
 	def updateArchive(self):
 		self.archive = self.p
 
+	def pack(self):
+		self.packed = "".join([struct.pack("!BBBBB10s"), "".join([x.pack() for x in self.cards])])
+
+
+
+
+
 
 
 class Game:
 	def __init__(self, filename):
 		self.board=[]
+		self.cards = []
 		with open(filename, "rU") as f:
     		for line in f:
     			line = line.strip()
@@ -70,10 +79,24 @@ class Game:
     				row.append(Tile(t))
     			board.append(row)
 
+    	with open("cards.txt", "rU") as f:
+    		cardDefs = {
+    			"Move 1":1,
+    			"Move 2":2,
+    			"Move 3":3,
+    			"Back up":4,
+    			"Rotate Right":5,
+    			"Rotate Left":6,
+    			"U-turn":7
+    		}
+    		for line in f:
+    			num, t = line.strip().strip("#").split(" / ")
+    			self.cards.append(Card(int(num), cardDefs[t]))
+
     	self.players = {}
     	self.startPos = [
-    		(0,0), (1,0), (2, 0), (3, 0), (4, 0),
-    		(5, 0), (6, 0), (7, 0), (8, 0)
+    		(14, 5), (14, 6), (14, 3), (14, 8),
+    		(14, 1), (14, 10), (14, 0), (14, 11)
     		]
 
     	self.boarder = Tile("1,0,0,0,0000")
@@ -84,6 +107,18 @@ class Game:
     	self.players[i].moveTo(startPos[i])
 
     	# send data to the player
+
+    def sendData():
+    	cards.shuffle()
+    	p = 0
+
+    	packedB = "".join(["".join([t.pack for t in row]) for row in self.board])
+
+    	map(lambda x:x.pack())
+
+    	for player in self.players.values():
+
+
     def playTurn(self):
     	for p in players.values():
     		p.getMove()
@@ -128,7 +163,6 @@ class Game:
 						player.direct = (player.direct +1)%4
 
 			# conveyors
-
 			for player in players.values():
 				tile = getTileAt(player.pos[0], player.pos[1])
 				tileType = tile.floorType
@@ -139,9 +173,7 @@ class Game:
 					elif nextTile.floorType in [6, 7, 12, 13]:
 						player.direct = (player.direct +1)%4
 
-
 			# pushers
-
 			for player in players.values():
 				tile = getTileAt(player.pos[0], player.pos[1])
 				tileType = tile.floorType
@@ -149,8 +181,6 @@ class Game:
 					self.move(player, 1, tile.direction)
 				elif tileType == 15 and regNum %2 == 1:
 					player.direct = (player.direct -1)%4
-
-
 
 			# gears
 			for player in players.values():
