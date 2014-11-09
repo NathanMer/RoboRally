@@ -5,7 +5,9 @@ project (RoboRally)
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-add_executable(RoboRally src/main.cpp)
+add_executable(RoboRally src/main.cpp src/graphics/TileMap.cpp)
+
+configure_file(src/graphics/tiles/WestSlide.png ${CMAKE_CURRENT_BINARY_DIR}/tiles/WestSlide.png COPYONLY)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)

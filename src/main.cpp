@@ -2,6 +2,7 @@
 #include <vector>
 #include <SFGUI/SFGUI.hpp>
 #include <SFML/Graphics.hpp>
+#include "graphics/TileMap.h"
 
 sf::VideoMode getBestFullscreenMode()
 {
@@ -20,49 +21,121 @@ sf::VideoMode getBestFullscreenMode()
     return bestMode;
 }
 
+TileMap map;
+std::vector<std::vector<int>> level;
+
+void onZoomIn ()
+{
+    map.zoomIn(level);
+}
+
+void onZoomOut ()
+{
+    map.zoomOut(level);
+}
+
+void onNorth () {
+    map.move(level, 0,-1);
+}
+
+void onWest () {
+    map.move(level, -1,0);
+}
+
+void onSouth () {
+    map.move(level, 0,1);
+}
+
+void onEast () {
+    map.move(level, 1,0);
+}
+
+void makeCard() {
+    auto cardButton = sfg::Button::Create("");
+    cardButton->GetSignal(sfg::Widget::OnLeftClick).Connect(onAddCard);
+}
+
 int main()
 {
-    //m_label->SetText( "Hello SFGUI, pleased to meet you!" ); //once
-
     sf::RenderWindow render_window(getBestFullscreenMode(), "RoboRally", sf::Style::Fullscreen);
 
     sfg::SFGUI m_sfgui;
 
-    // Create the label.
-    sfg::Label::Ptr m_label = sfg::Label::Create("RoboRally");
+    auto zoomInButton = sfg::Button::Create("Zoom In");
+    auto zoomOutButton = sfg::Button::Create("Zoom Out");
 
-    // Create a simple button and connect the click signal.
-    //auto button = sfg::Button::Create("Greet SFGUI!");
+    auto goNorth = sfg::Button::Create("Move North");
+    auto goWest = sfg::Button::Create("Move West");
+    auto goSouth = sfg::Button::Create("Move South");
+    auto goEast = sfg::Button::Create("Move East");
 
-    //button->GetSignal( sfg::Widget::OnLeftClick ).Connect( std::bind( &HelloWorld::OnButtonClick, this ) );
+    auto moveBotBox = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 5.0f);
+    moveBotBox->Pack(goWest, false);
+    moveBotBox->Pack(goSouth, false);
+    moveBotBox->Pack(goEast, false);
 
-    // Create a vertical box layouter with 5 pixels spacing and add the label
-    // and button to it.
+    auto moveBox = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.0f);
+    moveBox->Pack(goNorth, false);
+    moveBox->Pack(moveBotBox);
+
+    zoomInButton->GetSignal(sfg::Widget::OnLeftClick).Connect(onZoomIn);
+    zoomOutButton->GetSignal(sfg::Widget::OnLeftClick).Connect(onZoomOut);
+
+    goNorth->GetSignal(sfg::Widget::OnLeftClick).Connect(onNorth);
+    goWest->GetSignal(sfg::Widget::OnLeftClick).Connect(onWest);
+    goSouth->GetSignal(sfg::Widget::OnLeftClick).Connect(onSouth);
+    goEast->GetSignal(sfg::Widget::OnLeftClick).Connect(onEast);
+
     auto box = sfg::Box::Create( sfg::Box::Orientation::VERTICAL, 5.0f );
 
-    box->Pack( m_label );
+    //box->Pack( m_label );
+    box->Pack(zoomInButton, false);
+    box->Pack(zoomOutButton, false );
 
-    //box->Pack( button, false );
+    box->Pack(moveBox);
 
-    // Create a window and add the box layouter to it. Also set the window's title.
-    auto window = sfg::Window::Create();
+    auto middleBox = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.0f); //vertical container for middle
 
-    //window->SetTitle( "Hello world!" );
-
-    window->Add( box );
+    auto allBox = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 5.0f); //container for everything
+    //allBox->pack
 
     // Create a desktop and add the window to it.
     sfg::Desktop desktop;
 
-    desktop.Add( window );
+    //desktop.Add( window );
+    desktop.Add(box);
 
-    // We're not using SFML to render anything in this program, so reset OpenGL
-    // states. Otherwise we wouldn't see anything.
     render_window.resetGLStates();
 
     // Main loop!
     sf::Event event;
     sf::Clock clock;
+
+    int tmp [10][10] =
+    {
+        {0,1,1,1,1,1,0,0,0,0},
+        {0,0,0,0,0,1,0,0,1,0},
+        {0,0,0,0,0,0,0,0,1,0},
+        {0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,1,0},
+        {0,0,0,0,0,0,0,0,0,0},
+        {1,0,1,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,1,0},
+        {0,1,0,0,0,0,0,0,0,0}
+    };
+
+    for (int i = 0; i < 10; i++) {
+        level.push_back(std::vector<int>());
+        for (int j = 0; j < 10; j++) {
+            level[i].push_back(tmp[i][j]);
+        }
+    }
+
+    if (!map.load(80, level, 10, 10))
+        return -1;
+
+    map.setPosition(400,0);
 
     while( render_window.isOpen() ) {
         // Event processing.
@@ -81,6 +154,7 @@ int main()
         // Rendering.
         render_window.clear();
         m_sfgui.Display( render_window );
+        render_window.draw(map);
         render_window.display();
     }
     return 0;
