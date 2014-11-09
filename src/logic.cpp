@@ -90,6 +90,7 @@ struct Tile
 struct Player {
 	uint8 posX;
 	uint8 posY;
+	uint8 direction;
 	uint8 health;
 	uint8 life;
 	uint8 spriteId;

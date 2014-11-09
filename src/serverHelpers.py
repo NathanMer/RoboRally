@@ -58,10 +58,9 @@ class Player:
 		self.archive = self.p
 
 	def pack(self):
-		self.packed = "".join([struct.pack("!BBBBB10s"), "".join([x.pack() for x in self.cards])])
-
-
-
+		self.packed = "".join([struct.pack("!BBBBBB10s",
+			self.pos[0], self.pos[1], self.direct, self.hp, self.life, self.id, self.name.ljust(10, " ")
+			), "".join([x.pack() for x in self.cards])])
 
 
 
@@ -114,7 +113,7 @@ class Game:
 
     	packedB = "".join(["".join([t.pack for t in row]) for row in self.board])
 
-    	map(lambda x:x.pack())
+    	map(lambda x:x.pack() self.[players.values()])
 
     	for player in self.players.values():
 
@@ -253,19 +252,3 @@ class Game:
 		else:
 			return getTileAt(x, y), (x, y)
 
-    			
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
