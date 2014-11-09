@@ -5,6 +5,11 @@ from thread import *
 HOST = '10.116.203.245'   # Symbolic name meaning all available interfaces
 PORT = 12345
 
+board = [][]
+with open("board.txt", "rU") as f:
+    for line in f:
+        
+
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print 'Socket created'
 

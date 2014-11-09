@@ -4,6 +4,7 @@ cmake_minimum_required (VERSION 2.6)
 project (RoboRally)
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+SET(SFGUI_ROOT "/usr/local/share")
 
 add_executable(RoboRally src/main.cpp)
 
