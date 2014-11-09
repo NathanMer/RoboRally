@@ -3,13 +3,40 @@
 #include <thread>
 
 
+#define NORTH 0
+#define EAST 1
+#define SOUTH 2
+#define WEST 3
+
+#define EMPTY 0
+#define PIT 1
+#define CON_STRAIGHT 2
+#define FCON_STRAIGHT 3
+#define CON_LEFT 4
+#define FCON_LEFT 5
+#define CON_RIGHT 6
+#define FCON_RIGHT 7
+#define CON_MERGE 8
+#define FCON_MERGE 9
+#define CON_TJOIN_LEFT 10
+#define FCON_TJOIN_LEFT 11
+#define CON_TJOIN_RIGHT 12
+#define FCON_TJOIN_RIGHT 13
+#define PUSH_EVEN 14
+#define PUSH_ODD 15
+#define GEAR_CW 16
+#define GEAR_CCW 17
+#define WRENCH 18
+#define HAMMER 19
+
+
 struct Card
 {
 	int priority;
 	byte type;
 };
 
-enum Direction { NORTH, SOUTH, EAST, WEST };
+// enum Direction { NORTH, SOUTH, EAST, WEST };
 
 
 
@@ -32,22 +59,22 @@ struct Wall
 	bool west;
 };
 
-enum FloorType { EMPTY, PIT, 
-	CON_STRAIGHT, FCON_STRAIGHT,
-	CON_LEFT, FCON_LEFT,
-	CON_RIGHT, FCON_RIGHT,
-	CON_MERGE, FCON_MERGE,
-	CON_TJOIN_LEFT, FCON_TJOIN_LEFT,
-	CON_TJOIN_RIGHT, FCON_TJOIN_RIGHT,
-	PUSH_EVEN, PUSH_ODD,
-	GEAR_CW, GEAR_CCW,
-	WRENCH, HAMMER
-};
+// enum FloorType { EMPTY, PIT, 
+// 	CON_STRAIGHT, FCON_STRAIGHT,
+// 	CON_LEFT, FCON_LEFT,
+// 	CON_RIGHT, FCON_RIGHT,
+// 	CON_MERGE, FCON_MERGE,
+// 	CON_TJOIN_LEFT, FCON_TJOIN_LEFT,
+// 	CON_TJOIN_RIGHT, FCON_TJOIN_RIGHT,
+// 	PUSH_EVEN, PUSH_ODD,
+// 	GEAR_CW, GEAR_CCW,
+// 	WRENCH, HAMMER
+// };
 
 struct Laser
 {
 	byte number;		// 0, 1, 2, 3 depending on how many beams there are
-	Direction direction;
+	int direction;
 };
 
 struct Tile
@@ -55,8 +82,8 @@ struct Tile
 	// this should be drawn in reverse order of listing (ie FloorType comes before lasers)
 	Laser lasers;
 	Wall walls;
-	FloorType type;
-	Direction, direction;
+	int type;
+	int direction;
 };
 
 struct Player {
