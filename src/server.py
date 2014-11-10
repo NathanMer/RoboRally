@@ -1,8 +1,9 @@
 import socket
 import sys
 from thread import *
+from serverHelpers import *
 
-HOST = '10.237.27.1'   # Symbolic name meaning all available interfaces
+HOST = '172.20.10.2'   # Symbolic name meaning all available interfaces
 PORT = 12345
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -16,7 +17,7 @@ except socket.error , msg:
 
 print 'Socket bind complete'
 
-s.listen(10)
+s.listen(PORT)
 print 'Socket now listening'
 
 #Function for handling connections
@@ -41,7 +42,7 @@ print 'Socket now listening'
 g = Game("testBoard.txt")
 
 #now keep talking with the client
-while len(g.players.keys()) < 2:
+while len(g.players.keys()) < 1:
     #wait to accept a connection
     conn, addr = s.accept()
     print 'Connected with ' + addr[0] + ':' + str(addr[1])

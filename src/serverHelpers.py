@@ -69,98 +69,98 @@ class Game:
 	def __init__(self, filename):
 		self.board=[]
 		self.cards = []
-		with open(filename, "rU") as f:
-    		for line in f:
-    			line = line.strip()
-    			row = []
-    			
-    			for t in line.split(";"):
-    				row.append(Tile(t))
-    			board.append(row)
+		self.players = {}
+		self.startPos = [
+			(14, 5), (14, 6), (14, 3), (14, 8),
+			(14, 1), (14, 10), (14, 0), (14, 11)
+			]
 
-    	with open("cards.txt", "rU") as f:
-    		cardDefs = {
-    			"Move 1":1,
-    			"Move 2":2,
-    			"Move 3":3,
-    			"Back up":4,
-    			"Rotate Right":5,
-    			"Rotate Left":6,
-    			"U-turn":7
-    		}
-    		for line in f:
-    			num, t = line.strip().strip("#").split(" / ")
-    			self.cards.append(Card(int(num), cardDefs[t]))
+		for line in open(filename, "rU"):
+			line = line.strip()
+			row = []
 
-    	self.players = {}
-    	self.startPos = [
-    		(14, 5), (14, 6), (14, 3), (14, 8),
-    		(14, 1), (14, 10), (14, 0), (14, 11)
-    		]
+			for t in line.split():
+				row.append(Tile(t))
+			self.board.append(row)
 
-    	self.boarder = Tile("1,0,0,0,0000")
+		cards = []
+		cardDefs = {
+			"Move 1":1,
+			"Move 2":2,
+			"Move 3":3,
+			"Back up":4,
+			"Rotate Right":5,
+			"Rotate Left":6,
+			"U-Turn":7}
 
-    def addPlayer(self, conn, name):
-    	i = max(self.players.keys() + [-1])+1
-    	self.players[i] = Player(conn, name, i)
-    	self.players[i].moveTo(startPos[i])
+		for line in open("cards.txt", "rU"):
+			num, t = line.strip().strip("#").split(" / ")
+			self.cards.append(Card(int(num), cardDefs[t]))
+
+
+		self.boarder = Tile("1,0,0,0,0000")
+
+	def addPlayer(self, conn):
+		i = max(self.players.keys() + [-1])+1
+		self.players[i] = Player(conn, i)
+		self.players[i].moveTo(startPos[i])
 
     	# send data to the player
 
-    def getMoves(self):
-    	map(lambda x: x.getMove(), self.players.values())
+	def getMoves(self):
+		map(lambda x: x.getMove(), self.players.values())
 
-    def sendData():
-    	cards.shuffle()
-    	p = 0
+	def sendData():
+		cards.shuffle()
+		p = 0
 
-    	packedB = "".join(["".join([t.pack for t in row]) for row in self.board])
+		packedB = "".join(["".join([t.pack for t in row]) for row in self.board])
 
-    	map(lambda x:x.pack() self.[players.values()])
+		map(lambda x:x.pack(), self.players.values())
 
-    	vs = self.players.values()
-
-
-    	for i in range(len(players.keys())):
-    		p = self.players[i]
-    		vs.remove(p)
-    		mess = "".join(map(lambda x: x.packed, vs)) + p.packed
-
-    		p.conn.sendall(mess)
-    		vs.append(p)
+		vs = self.players.values()
 
 
-    def playTurn(self):
-    	for p in players.values():
-    		p.getMove()
+		for i in range(len(players.keys())):
+			p = self.players[i]
+			vs.remove(p)
+			mess = "".join(map(lambda x: x.packed, vs)) + p.packed
+
+			p.conn.sendall(mess)
+			vs.append(p)
 
 
-    	for regNum in xrange(5):
-    		thisRegister = []
-    		lowestP = 900
-    		lowestId = 0
-    		for p in self.players.values():
-    			thisRegister.append(([p.id], p.cards[regNum]))
-    		thisRegister.sort(key=lambda x: -x[1].priority)
+	def playTurn(self):
+		for p in players.values():
+			p.getMove()
 
-    		for i, card in thisRegister:
-    			cardType = card.cardType
-    			player = players[i]
 
-    			if cardType == 1:
-    				self.move(player, 1, player.direct)
-    			elif cardType == 2:
-    				self.move(player, 2, player.direct)
+		for regNum in xrange(5):
+			thisRegister = []
+			lowestP = 900
+			lowestId = 0
+			for p in self.players.values():
+				thisRegister.append(([p.id], p.cards[regNum]))
+				thisRegister.sort(key=lambda x: -x[1].priority)
+
+			for i, card in thisRegister:
+				cardType = card.cardType
+				player = players[i]
+
+				if cardType == 1:
+					self.move(player, 1, player.direct)
+				elif cardType == 2:
+					self.move(player, 2, player.direct)
 				elif cardType == 3:
-    				self.move(player, 3, player.direct)
+					self.move(player, 3, player.direct)
 				elif cardType == 4:
-    				self.move(player, 1, (player.direct +2)%4)
-    			elif cardType == 5:
-    				player.direct = (player.direct + 1) %4
-    			elif cardType == 6:
-    				player.direct = (player.direct - 1) %4
+					self.move(player, 1, (player.direct +2)%4)
+				elif cardType == 5:
+					player.direct = (player.direct + 1) %4
+				elif cardType == 6:
+					player.direct = (player.direct - 1) %4
 				elif cardType == 7:
-    				player.direct = (player.direct + 2) %4
+					player.direct = (player.direct + 2) %4
 
 			# express conveyors
 			for player in players.values():
@@ -169,9 +169,9 @@ class Game:
 				if tileType in [3, 5, 7, 9, 11, 13]:
 					nextTile = self.singleSoftMove(player, tile.direction)
 					if nextTile.floorType in [4, 5, 10, 11]:
-						player.direct = (player.direct -1)%4
+							player.direct = (player.direct -1)%4
 					elif nextTile.floorType in [6, 7, 12, 13]:
-						player.direct = (player.direct +1)%4
+							player.direct = (player.direct +1)%4
 
 			# conveyors
 			for player in players.values():
@@ -205,11 +205,11 @@ class Game:
 	def move(player, distance, direction):
 		tile = getTileAt(player.pos[0], player.pos[1])
 		if direction in tile.walls:
-			return False:
+			return False
 
 		nextTile, otherPos = getTileInDir(player.pos[0], player.pos[1], direction)
 		if (direction + 2)%4 in nextTile.walls:
-			return False:
+			return False
 
 		clear = true
 		for other in self.players:
@@ -229,11 +229,11 @@ class Game:
 	def singleSoftMove(player, direction):
 		tile = getTileAt(player.pos[0], player.pos[1])
 		if direction in tile.walls:
-			return False:
+			return False
 
 		nextTile, otherPos = getTileInDir(player.pos[0], player.pos[1], direction)
 		if (direction + 2)%4 in nextTile.walls:
-			return False:
+			return False
 
 		clear = true
 		for other in self.players:

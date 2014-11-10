@@ -1,5 +1,5 @@
 #690 / Move 2
-#440 / Back 1
+#440 / Back up
 #20  / U-Turn
 #750 / Move 2
 #570 / Move 1
@@ -16,7 +16,7 @@
 #160 / Rotate Right
 #40  / U-Turn
 #220 / Rotate Right
-#400 / Rotate right
+#400 / Rotate Right
 #280 / Rotate Right
 #230 / Rotate Left
 #700 / Move 2
@@ -31,13 +31,13 @@
 #240 / Rotate Right
 #100 / Rotate Right
 #120 / Rotate Right
-#60  / U-turn
+#60  / U-Turn
 #200 / Rotate Right
 #300 / Rotate Right
 #140 / Rotate Right
 #740 / Move 2
 #780 / Move 2
-#430 / Back Up
+#430 / Back up
 #250 / Rotate Left
 #350 / Rotate Left
 #520 / Move 1
